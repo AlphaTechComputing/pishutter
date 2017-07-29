@@ -27,14 +27,14 @@ sunset_parsed = dateutil.parser.parse(str(sunset_datetime))
 current_parsed = dateutil.parser.parse(str(current_time))
 
 
-#print "Sunrise: " + str(sunrise_parsed)
-#print "Sunset: " + str(sunset_parsed)
-#print "Current: " + str(current_parsed)
+print "Sunrise: " + str(sunrise_parsed)
+print "Sunset: " + str(sunset_parsed)
+print "Current: " + str(current_parsed)
 
 def main():
     while True:
 	#before sunrise
-	if sunrise_parsed <= current_parsed >= sunset_parsed:
+	if sunrise_parsed <= current_parsed <= sunset_parsed:
 		print "after sunrise and before sunset; closing filter"
 		time.sleep(30)
 
