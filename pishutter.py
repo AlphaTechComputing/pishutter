@@ -47,18 +47,20 @@ def return_filter_time():
 	print "Current: " + str(current_parsed)
 
 	if sunrise_parsed <= current_parsed <= sunset_parsed:
-		print "after sunrise and before sunset; closing filter"
+		print "after sunrise this morning and before sunset today; filter should be closed"
 		return "close"
 
 	if sunset_parsed <= current_parsed <= sunrise_parsed:
-                print "after sunset and before sunrise this morning. opening filter"
+                print "after sunset and before sunrise this morning. filter should be opened"
 		return "open"
 
-
 	if sunset_parsed <= current_parsed and sunrise_parsed <= current_parsed:
-                print "after sunset today and before sunrise next morning. opening filter"
+                print "after sunset today and before sunrise next morning. filter should be opened"
                 return "open"
 
+	if sunrise_parsed >= current_parsed and sunset_parsed >= current_parsed:
+		print "before sunrise and sunset today. filter should be opened"
+		return "open"
 
 	else:
 		raise Exception('Logical error with return_filter_time function')
