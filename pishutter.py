@@ -12,6 +12,7 @@ Motor1B = 24
 Motor1E = 25
 
 GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 GPIO.setup(Motor1A,GPIO.OUT)
 GPIO.setup(Motor1B,GPIO.OUT)
 GPIO.setup(Motor1E,GPIO.OUT)
@@ -47,11 +48,18 @@ def return_filter_time():
 
 	if sunrise_parsed <= current_parsed <= sunset_parsed:
 		print "after sunrise and before sunset; closing filter"
-		return close
+		return "close"
 
-	if sunset_parsed >= current_parsed <= sunrise_parsed:
-                print "after sunset and before sunrise opening filter"
-		return open
+	if sunset_parsed <= current_parsed <= sunrise_parsed:
+                print "after sunset and before sunrise this morning. opening filter"
+		return "open"
+
+
+	if sunset_parsed <= current_parsed and sunrise_parsed <= current_parsed:
+                print "after sunset today and before sunrise next morning. opening filter"
+                return "open"
+
+
 	else:
 		raise Exception('Logical error with return_filter_time function')
 
@@ -63,47 +71,46 @@ def return_filter_state():
 	state2 = GPIO.input(24)
 	state3 = GPIO.input(25)
 
-
 	if state1 == 1 and state2 == 0 and state3 == 1:
-		print "Filter closed"
-		return closed
+		return "closed"
 
 	if state1 == 0 and state2 == 1 and state3 == 1:
-		print "Filter open"
-		return opened
-
-
+		return "open"
 
 def open_filter():
 
-	if return_filter_state() == opened:
+	if return_filter_state() == "open":
 		print "Filter is already open."
 
 	else:
 		GPIO.output(Motor1A,GPIO.LOW)
 		GPIO.output(Motor1B,GPIO.HIGH)
 		GPIO.output(Motor1E,GPIO.HIGH)
+		print "Filter opened"
 
 def close_filter():
 
-	if return_filter_state() == closed:
-		print "Filter is already open."
+	if return_filter_state() == "closed":
+		print "Filter is already closed."
 
 	else:
 		GPIO.output(Motor1A,GPIO.HIGH)
                 GPIO.output(Motor1B,GPIO.LOW)
                 GPIO.output(Motor1E,GPIO.HIGH)
+		print "Filter closed"
 
 
 def main():
 
 	try:
-
-	    if return_filter_time() == open:
+#	  while True:
+	    if return_filter_time() == "open":
 		open_filter()
+		time.sleep(2)
 
-	    if return_filter_time() == close:
+	    if return_filter_time() == "close":
 		close_filter()
+		time.sleep(2)
 
 	finally:
 		GPIO.cleanup()
