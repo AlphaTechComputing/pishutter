@@ -66,53 +66,36 @@ def return_filter_time():
 		raise Exception('Logical error with return_filter_time function')
 
 
-#Check if the filter is open or closed
-def return_filter_state():
-
-	state1 = GPIO.input(23)
-	state2 = GPIO.input(24)
-	state3 = GPIO.input(25)
-
-	if state1 == 1 and state2 == 0 and state3 == 1:
-		return "closed"
-
-	if state1 == 0 and state2 == 1 and state3 == 1:
-		return "open"
 
 def open_filter():
 
-	if return_filter_state() == "open":
-		print "Filter is already open."
-
-	else:
-		GPIO.output(Motor1A,GPIO.LOW)
-		GPIO.output(Motor1B,GPIO.HIGH)
+		GPIO.output(Motor1A,GPIO.HIGH)
+		GPIO.output(Motor1B,GPIO.LOW)
 		GPIO.output(Motor1E,GPIO.HIGH)
+		time.sleep(5)
 		print "Filter opened"
 
 def close_filter():
 
-	if return_filter_state() == "closed":
-		print "Filter is already closed."
 
-	else:
-		GPIO.output(Motor1A,GPIO.HIGH)
-                GPIO.output(Motor1B,GPIO.LOW)
+		GPIO.output(Motor1A,GPIO.LOW)
+                GPIO.output(Motor1B,GPIO.HIGH)
                 GPIO.output(Motor1E,GPIO.HIGH)
+		time.sleep(5)
 		print "Filter closed"
 
 
 def main():
 
 	try:
-#	  while True:
+	  while True:
 	    if return_filter_time() == "open":
 		open_filter()
-		time.sleep(2)
+		time.sleep(300)
 
 	    if return_filter_time() == "close":
 		close_filter()
-		time.sleep(2)
+		time.sleep(300)
 
 	finally:
 		GPIO.cleanup()
